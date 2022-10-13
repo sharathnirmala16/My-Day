@@ -1,0 +1,37 @@
+﻿<Page
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyDay"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:Custom1="using:Microsoft.UI.Xaml.Controls"
+    x:Class="MyDay.MainPage"
+    mc:Ignorable="d" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Black">
+    <Grid Width="1920" Height="1080" Background="Transparent">
+        <Custom:DataGrid x:Name="MainTable" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind VisibleTasks, Mode=OneWay}" CanUserReorderColumns="False" IsReadOnly="False" SelectionMode="Single" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CanUserResizeColumns="False"/>
+        <AppBarButton x:Name="CreateButton" Icon="Add" Label="Create Task" Margin="100,380,0,0" Width="100" Height="60" Click="CreateButton_Click"></AppBarButton>
+        <AppBarButton x:Name="DeleteButton" Icon="Delete" Label="Delete Task" Margin="200,380,0,0" Width="100" Height="60" Click="DeleteButton_Click"></AppBarButton>
+        <Rectangle HorizontalAlignment="Left" Height="1080" Margin="299,0,0,0" Stroke="White" VerticalAlignment="Top" Width="1"/>
+        <Rectangle HorizontalAlignment="Left" Height="1" Margin="300,60,0,0" Stroke="White" VerticalAlignment="Top" Width="1620"/>
+        <Grid MaxWidth="1620" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="310,0,0,0">
+            <TextBlock x:Name="UpcomingLabel" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Left" Height="36" MaxHeight="60" MaxWidth="1620" FontSize="24" Text="Upcoming Task" TextWrapping="Wrap"/>
+        </Grid>
+        <TextBlock x:Name="FilterTitleLabel" VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Height="48" Margin="10,10,0,0" FontSize="36" Text="Filters" TextWrapping="Wrap" FontWeight="SemiBold"/>
+        <CheckBox x:Name="CreationDateCheckBox" Content="Creation Date" FontSize="16" Margin="15,65,0,0" VerticalAlignment="Top" Click="CreationDateCheckBox_Click"/>
+        <CalendarDatePicker x:Name="CreationDatePicker" VerticalAlignment="Top" Width="270" Margin="15,95,0,15"/>
+        <CheckBox x:Name="DueDateCheckBox" Content="Due Date" FontSize="16" Margin="15,140,0,0" VerticalAlignment="Top" Click="DueDateCheckBox_Click"/>
+        <CalendarDatePicker x:Name="DueDatePicker" VerticalAlignment="Top" Width="270" Margin="15,170,0,15"/>
+        <CheckBox x:Name="PriorityCheckBox" Content="Priority" FontSize="16" Margin="15,220,0,0" VerticalAlignment="Top" Click="PriorityCheckBox_Click"/>
+        <ComboBox x:Name="PriorityComboBox" Margin="15,255,0,0" Width="270">
+            <ComboBoxItem Content="High"/>
+            <ComboBoxItem Content="Normal"/>
+            <ComboBoxItem Content="Low"/>
+        </ComboBox>
+        <CheckBox x:Name="PendingCheckBox" Content="Pending or Complete" FontSize="16" Margin="15,300,0,0" VerticalAlignment="Top" Click="PendingCheckBox_Click"/>
+        <ComboBox x:Name="PendingComboBox" Margin="15,330,0,0" Width="270">
+            <ComboBoxItem Content="Pending"/>
+            <ComboBoxItem Content="Complete"/>
+        </ComboBox>
+        <AppBarButton Icon="Filter" Label="Apply Filters" Height="60" Width ="100" Margin="0,380,0,0"/>
+    </Grid>
+</Page>
