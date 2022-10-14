@@ -201,6 +201,9 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls.DataGrid">
       <Version>7.1.2</Version>
     </PackageReference>
+    <PackageReference Include="Syncfusion.SfGrid.UWP">
+      <Version>20.3.0.49</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

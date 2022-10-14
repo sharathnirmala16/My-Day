@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Syncfusion.UI.Xaml.Controls;
 
 namespace MyDay
 {
@@ -12,9 +13,9 @@ namespace MyDay
         public bool Complete { get; set; }
         public String Category { get; set; }
         public String TaskDescription { get; set; }
-        public DatePicker CreatedDate { get; set; }
-        public DatePicker DueDate { get; set; }
-        public TimePicker DueTime { get; set; }
-        public ComboBox Priority { get; set; }
+        public DateTime CreationDate { get; set; }
+        public DateTime DueDate { get; set; }
+        public String DueTime { get; set; }
+        public String Priority { get; set; }
     }
 }

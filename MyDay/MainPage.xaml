@@ -5,12 +5,14 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Custom="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:Custom1="using:Microsoft.UI.Xaml.Controls"
+    xmlns:Custom2="using:Syncfusion.UI.Xaml.Grid"
+    xmlns:Custom3="using:Syncfusion.UI.Xaml.Controls.Input"
     x:Class="MyDay.MainPage"
     mc:Ignorable="d" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Black">
     <Grid Width="1920" Height="1080" Background="Transparent">
-        <Custom:DataGrid x:Name="MainTable" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind VisibleTasks, Mode=OneWay}" CanUserReorderColumns="False" IsReadOnly="False" SelectionMode="Single" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CanUserResizeColumns="False"/>
-        <AppBarButton x:Name="CreateButton" Icon="Add" Label="Create Task" Margin="100,380,0,0" Width="100" Height="60" Click="CreateButton_Click"></AppBarButton>
-        <AppBarButton x:Name="DeleteButton" Icon="Delete" Label="Delete Task" Margin="200,380,0,0" Width="100" Height="60" Click="DeleteButton_Click"></AppBarButton>
+        <AppBarButton x:Name="CreateButton" Icon="Add" Label="Create Task" Margin="75,455,0,0" Width="75" Height="60" Click="CreateButton_Click"/>
+        <AppBarButton x:Name="DeleteButton" Icon="Delete" Label="Delete Task" Margin="225,455,0,0" Width="75" Height="60" Click="DeleteButton_Click"/>
+        <AppBarButton x:Name="SaveButton" Icon="Save" Label="Save Tasks" Margin="150,455,0,0" Width="75" Height="60" Click="SaveButton_Click"/>
         <Rectangle HorizontalAlignment="Left" Height="1080" Margin="299,0,0,0" Stroke="White" VerticalAlignment="Top" Width="1"/>
         <Rectangle HorizontalAlignment="Left" Height="1" Margin="300,60,0,0" Stroke="White" VerticalAlignment="Top" Width="1620"/>
         <Grid MaxWidth="1620" Height="60" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="310,0,0,0">
@@ -32,6 +34,9 @@
             <ComboBoxItem Content="Pending"/>
             <ComboBoxItem Content="Complete"/>
         </ComboBox>
-        <AppBarButton Icon="Filter" Label="Apply Filters" Height="60" Width ="100" Margin="0,380,0,0"/>
+        <AppBarButton Icon="Filter" Label="Apply Filters" Height="60" Width ="75" Margin="0,455,0,0"/>
+        <CheckBox x:Name="CategoryCheckBox" Content="Category" FontSize="16" Margin="15,375,0,0" VerticalAlignment="Top" Click="CategoryCheckBox_Click"/>
+        <ComboBox x:Name="CategoryComboBox" Margin="15,405,0,0" Width="270"/>
+        <Custom2:SfDataGrid x:Name="MainTable" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind Path=VisibleTasks}" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CurrentCellEndEdit="MainTable_CurrentCellEndEdit" CurrentCellBeginEdit="MainTable_CurrentCellBeginEdit" CurrentCellValueChanged="MainTable_CurrentCellValueChanged"/>
     </Grid>
 </Page>
