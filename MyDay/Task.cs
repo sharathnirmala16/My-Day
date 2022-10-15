@@ -17,5 +17,6 @@ namespace MyDay
         public DateTime DueDate { get; set; }
         public String DueTime { get; set; }
         public String Priority { get; set; }
+        public String TaskID { get; set; }
     }
 }

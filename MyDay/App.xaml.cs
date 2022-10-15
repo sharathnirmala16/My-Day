@@ -30,6 +30,7 @@ namespace MyDay
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            SqliteDataAccess.InitializeDatabase();
         }
 
         /// <summary>
