@@ -32,10 +32,11 @@ namespace MyDay
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private ObservableCollection<Task> VisibleTasks { get; set; }
         private ObservableCollection<Task> AllTasks { get; set; }
-        private List<String> GridCBItems { get; set; }
+        private List<string> GridCBItems { get; set; }
+        private List<string> TaskIDs { get; set; }
         private bool EditingTime { get; set; }
+        private bool EditingTaskDescription { get; set; }
         public static string DB_PATH { get; set; }
 
         public MainPage()
@@ -43,18 +44,17 @@ namespace MyDay
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NzM5Mjc2QDMyMzAyZTMzMmUzMEdDNGN1V0JBRWVQUGVRZENERnBSalQ5VS9iTC9yeEMxS2RHMXFoMHhIMDA9");
             this.InitializeComponent();
 
-            DB_PATH = "";
             AllTasks = new ObservableCollection<Task>();
-            VisibleTasks = new ObservableCollection<Task>();
-            GridCBItems = new List<String>();
+            TaskIDs = new List<string>();
+            GridCBItems = new List<string>();
             StartConfiguration();
         }
 
         public async void StartConfiguration()
         {
-            MainTable.ItemsSource = VisibleTasks;
-
+            DB_PATH = "";
             EditingTime = false;
+            EditingTaskDescription = false;
 
             CreationDateCheckBox.IsChecked = false;
             DueDateCheckBox.IsChecked = false;
@@ -74,9 +74,26 @@ namespace MyDay
 
             try
             {
-                
+                LoadAllTasks();
             }
             catch (Exception ex) { await new MessageDialog(ex.ToString(), "Loading Tasks Error").ShowAsync(); }
+            MainTable.ItemsSource = AllTasks;
+        }
+
+        private void LoadAllTasks()
+        {
+            foreach (string task in TasksStorage.LoadTasks())
+            {
+                if (task.Length > 0 && task[0] != 'C') AllTasks.Add(TasksStorage.ParseStringToTask(task));
+            }
+            EnumerateTaskIDs();
+            MainTable.UpdateLayout();
+        }
+
+        public void EnumerateTaskIDs()
+        {
+            TaskIDs.Clear();
+            foreach(var row in AllTasks) TaskIDs.Add(row.TaskID);
         }
 
         private string RandomAlphaNumeric(int size = 8)
@@ -105,7 +122,7 @@ namespace MyDay
             };
 
             AllTasks.Add(newTask);
-            VisibleTasks.Add(newTask);
+            TaskIDs.Add(newTask.TaskID);
             MainTable.UpdateLayout();
         }
 
@@ -133,7 +150,7 @@ namespace MyDay
             {
                 string ID = GetTaskIDFromMainTable();
                 AllTasks.RemoveAt(SearchObservableCollection(AllTasks, ID));
-                VisibleTasks.RemoveAt(MainTable.SelectedIndex);
+                _ = TaskIDs.Remove(ID);
                 MainTable.UpdateLayout();
             }
             catch
@@ -251,7 +268,8 @@ namespace MyDay
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-
+            TasksStorage.DeleteStorageFile();
+            foreach (Task myTask in AllTasks) TasksStorage.SaveTask(myTask);
         }
 
         private async void MainTable_CurrentCellEndEdit(object sender, CurrentCellEndEditEventArgs e)
@@ -286,17 +304,73 @@ namespace MyDay
                 catch { }
                 EditingTime = false;
             }
+
+            else if (EditingTaskDescription)
+            {
+                try
+                {
+                    var reflector = MainTable.View.GetPropertyAccessProvider();
+                    foreach (var row in MainTable.SelectedItems)
+                    {
+                        foreach (var column in MainTable.Columns)
+                        {
+                            if (column.HeaderText == "Task Description")
+                            {
+                                string td = reflector.GetValue(row, column.MappingName).ToString();
+                                if (td.IndexOf(',') != -1)
+                                {
+                                    await new MessageDialog("No comma allowed in the task description.", "Task Description Error").ShowAsync();
+                                    reflector.SetValue(row, column.MappingName, "");
+                                }
+                            }
+                        }
+                    }
+                }
+                catch { }
+                EditingTaskDescription = false;
+            }
+            int SelectedRow = MainTable.SelectedIndex;
+            AllTasks[SearchObservableCollection(AllTasks, GetTaskIDFromMainTable())] = AllTasks[SelectedRow];
         }
 
         private void MainTable_CurrentCellBeginEdit(object sender, CurrentCellBeginEditEventArgs e)
         {
             if (e.Column.HeaderText == "Due Time") EditingTime = true;
+            else if (e.Column.HeaderText == "Task Description") EditingTaskDescription = true;
         }
 
         private void MainTable_CurrentCellValueChanged(object sender, CurrentCellValueChangedEventArgs e)
         {
-            int SelectedRow = MainTable.SelectedIndex;
-            AllTasks[SearchObservableCollection(AllTasks, GetTaskIDFromMainTable())] = VisibleTasks[SelectedRow];
+            
+        }
+
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (FilterButton.Label == "Reset Filter") LoadAllTasks();
+            else
+            {
+                //Delete Tasks for each Filter
+                if (CreationDatePicker.IsEnabled && CreationDatePicker.Date.HasValue)
+                {
+                    string date = CreationDatePicker.Date.ToString().Substring(0, 10);
+                    foreach (Task task in AllTasks)
+                    {
+                        
+                    }
+                }
+            }
+
+            if (FilterButton.Icon == new SymbolIcon(Symbol.Filter))
+            {
+                FilterButton.Icon = new SymbolIcon(Symbol.Refresh);
+                FilterButton.Label = "Reset Filter";
+            }
+
+            else 
+            {
+                FilterButton.Icon = new SymbolIcon(Symbol.Filter);
+                FilterButton.Label = "Apply Filter";
+            }
         }
     }
 }
