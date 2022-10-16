@@ -8,7 +8,7 @@
 
   <Identity
     Name="98046e9b-894d-4886-8cbc-eb3bc02b234e"
-    Publisher="CN=snirm"
+    Publisher="CN=Sharath Nirmala"
     Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="98046e9b-894d-4886-8cbc-eb3bc02b234e" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
@@ -37,7 +37,13 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="My Day is UWP based To Do List Application."
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png" ShortName="My Day">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+            <uap:ShowOn Tile="square310x310Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>

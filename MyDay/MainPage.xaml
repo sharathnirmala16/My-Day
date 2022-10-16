@@ -9,7 +9,7 @@
     xmlns:Custom3="using:Syncfusion.UI.Xaml.Controls.Input"
     x:Class="MyDay.MainPage"
     mc:Ignorable="d" HorizontalAlignment="Center" VerticalAlignment="Center" Background="Black">
-    <Grid Width="1920" Height="1080" Background="Transparent">
+    <Grid Width="1920" Height="1080" Background="Transparent" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <AppBarButton x:Name="CreateButton" Icon="Add" Label="Create Task" Margin="75,455,0,0" Width="75" Height="60" Click="CreateButton_Click"/>
         <AppBarButton x:Name="DeleteButton" Icon="Delete" Label="Delete Task" Margin="150,455,0,0" Width="75" Height="60" Click="DeleteButton_Click"/>
         <AppBarButton x:Name="SaveButton" Icon="Save" Label="Save Tasks" Margin="225,455,0,0" Width="75" Height="60" Click="SaveButton_Click"/>
@@ -37,6 +37,6 @@
         <AppBarButton x:Name="FilterButton" Icon="Filter" Label="Apply Filters" Height="60" Width ="75" Margin="0,455,0,0" Click="FilterButton_Click"/>
         <TextBlock x:Name="CategoryLabel" Text="Category" FontSize="16" Margin="15,375,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" DoubleTapped="CategoryLabel_DoubleTapped"/>
         <ComboBox x:Name="CategoryComboBox" Margin="15,405,0,0" Width="270"/>
-        <Custom2:SfDataGrid x:Name="MainTable" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind Path=AllTasks}" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CurrentCellEndEdit="MainTable_CurrentCellEndEdit" CurrentCellBeginEdit="MainTable_CurrentCellBeginEdit" CurrentCellValueChanged="MainTable_CurrentCellValueChanged"/>
+        <Custom2:SfDataGrid x:Name="MainTable" ColumnSizer="Auto" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind Path=AllTasks}" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CurrentCellEndEdit="MainTable_CurrentCellEndEdit" CurrentCellBeginEdit="MainTable_CurrentCellBeginEdit" CurrentCellValueChanged="MainTable_CurrentCellValueChanged"/>
     </Grid>
 </Page>

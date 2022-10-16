@@ -1,25 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Microsoft.UI.Xaml.Controls;
-using Windows.UI.ViewManagement;
-using System.ComponentModel;
 using System.Collections.ObjectModel;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.UI.Xaml;
-using System.Data;
 using Syncfusion.UI.Xaml.Controls.Input;
 using Windows.UI.Popups;
 
@@ -68,6 +54,7 @@ namespace MyDay
             MainTable.ItemsSource = AllTasks;
             FillCategoryComboBox();
             UpdateUpcomingTaskLabel();
+            MainTable.AllowResizingColumns = true;
         }
 
         private void LoadAllTasks()
@@ -157,12 +144,12 @@ namespace MyDay
         {
             if (e.Column.HeaderText == "Complete")
             {
-                e.Column.Width = 90;
+                //e.Column.Width = 90;
                 e.Column.AllowEditing = true;
             }
             if (e.Column.HeaderText == "Category")
             {
-                e.Column.Width = 130;
+                //e.Column.Width = 130;
                 e.Column.AllowEditing = true;
                 e.Column.TextAlignment = TextAlignment.Center;
                 e.Column.AllowSorting = true;
@@ -170,7 +157,7 @@ namespace MyDay
             if (e.Column.HeaderText == "TaskDescription")
             {
                 e.Column.HeaderText = "Task Description";
-                e.Column.Width = 800;
+                //e.Column.Width = 200;
                 e.Column.AllowEditing = true;
             }
             if (e.Column.HeaderText == "CreationDate")
@@ -179,7 +166,7 @@ namespace MyDay
                 gdtc.MappingName = "CreationDate";
                 gdtc.HeaderText = "Creation Date";
                 gdtc.AllowEditing = false;
-                gdtc.Width = 200;
+                //gdtc.Width = 200;
                 gdtc.FormatString = "dd/MM/yyyy";
                 gdtc.TextAlignment = TextAlignment.Center;
                 gdtc.AllowSorting = true;
@@ -191,7 +178,7 @@ namespace MyDay
                 gdtc.MappingName = "DueDate";
                 gdtc.HeaderText = "Due Date";
                 gdtc.AllowEditing = true;
-                gdtc.Width = 200;
+                //gdtc.Width = 200;
                 gdtc.FormatString = "dd/MM/yyyy";
                 gdtc.TextAlignment = TextAlignment.Center;
                 gdtc.AllowSorting = true;
@@ -205,7 +192,7 @@ namespace MyDay
                 gtc.MappingName = "DueTime";
                 gtc.HeaderText = "Due Time";
                 gtc.AllowEditing = true;
-                gtc.Width = 100;
+                //gtc.Width = 100;
                 gtc.TextAlignment = TextAlignment.Center;
                 gtc.AllowSorting = true;
                 e.Column = gtc;
@@ -216,7 +203,7 @@ namespace MyDay
                 gcbc.MappingName = "Priority";
                 gcbc.HeaderText = "Priority";
                 gcbc.AllowEditing = true;
-                gcbc.Width = 100;
+                //gcbc.Width = 100;
                 gcbc.ItemsSource = GridCBItems;
                 gcbc.TextAlignment = TextAlignment.Center;
                 gcbc.AllowSorting = true;
@@ -270,7 +257,7 @@ namespace MyDay
                 }
                 UpcomingLabel.Text = "Upcoming Task: " + result.TaskDescription;
             }
-            else UpcomingLabel.Text = "No Tasks left";
+            else UpcomingLabel.Text = "No tasks left";
         }
 
         private async void MainTable_CurrentCellEndEdit(object sender, CurrentCellEndEditEventArgs e)
