@@ -19,23 +19,23 @@
             <TextBlock x:Name="UpcomingLabel" VerticalAlignment="Center" TextAlignment="Center" HorizontalAlignment="Left" Height="36" MaxHeight="60" MaxWidth="1620" FontSize="24" Text="Upcoming Task" TextWrapping="Wrap"/>
         </Grid>
         <TextBlock x:Name="FilterTitleLabel" VerticalAlignment="Top" TextAlignment="Center" HorizontalAlignment="Left" Height="48" Margin="10,10,0,0" FontSize="36" Text="Filters" TextWrapping="Wrap" FontWeight="SemiBold"/>
-        <CheckBox x:Name="CreationDateCheckBox" Content="Creation Date" FontSize="16" Margin="15,65,0,0" VerticalAlignment="Top" Click="CreationDateCheckBox_Click"/>
+        <TextBlock x:Name="CreationDateLabel" Text="Creation Date" FontSize="16" Margin="15,65,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" DoubleTapped="CreationDateLabel_DoubleTapped"/>
         <CalendarDatePicker x:Name="CreationDatePicker" VerticalAlignment="Top" Width="270" Margin="15,95,0,15"/>
-        <CheckBox x:Name="DueDateCheckBox" Content="Due Date" FontSize="16" Margin="15,140,0,0" VerticalAlignment="Top" Click="DueDateCheckBox_Click"/>
+        <TextBlock x:Name="DueDateLabel" Text="Due Date" FontSize="16" Margin="15,140,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" SelectionChanged="DueDateLabel_SelectionChanged"/>
         <CalendarDatePicker x:Name="DueDatePicker" VerticalAlignment="Top" Width="270" Margin="15,170,0,15"/>
-        <CheckBox x:Name="PriorityCheckBox" Content="Priority" FontSize="16" Margin="15,220,0,0" VerticalAlignment="Top" Click="PriorityCheckBox_Click"/>
+        <TextBlock x:Name="PriorityLabel" Text="Priority" FontSize="16" Margin="15,220,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" DoubleTapped="PriorityLabel_DoubleTapped"/>
         <ComboBox x:Name="PriorityComboBox" Margin="15,255,0,0" Width="270">
             <ComboBoxItem Content="High"/>
             <ComboBoxItem Content="Normal"/>
             <ComboBoxItem Content="Low"/>
         </ComboBox>
-        <CheckBox x:Name="PendingCheckBox" Content="Pending or Complete" FontSize="16" Margin="15,300,0,0" VerticalAlignment="Top" Click="PendingCheckBox_Click"/>
+        <TextBlock x:Name="PendingLabel" Text="Pending or Complete" FontSize="16" Margin="15,300,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" DoubleTapped="PendingLabel_DoubleTapped"/>
         <ComboBox x:Name="PendingComboBox" Margin="15,330,0,0" Width="270">
             <ComboBoxItem Content="Pending"/>
             <ComboBoxItem Content="Complete"/>
         </ComboBox>
         <AppBarButton x:Name="FilterButton" Icon="Filter" Label="Apply Filters" Height="60" Width ="75" Margin="0,455,0,0" Click="FilterButton_Click"/>
-        <CheckBox x:Name="CategoryCheckBox" Content="Category" FontSize="16" Margin="15,375,0,0" VerticalAlignment="Top" Click="CategoryCheckBox_Click"/>
+        <TextBlock x:Name="CategoryLabel" Text="Category" FontSize="16" Margin="15,375,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" DoubleTapped="CategoryLabel_DoubleTapped"/>
         <ComboBox x:Name="CategoryComboBox" Margin="15,405,0,0" Width="270"/>
         <Custom2:SfDataGrid x:Name="MainTable" HorizontalAlignment="Left" Height="1020" Margin="300,60,0,0" VerticalAlignment="Top" Width="1620" ItemsSource="{x:Bind Path=AllTasks}" AutoGeneratingColumn="MainTable_AutoGeneratingColumn" CurrentCellEndEdit="MainTable_CurrentCellEndEdit" CurrentCellBeginEdit="MainTable_CurrentCellBeginEdit" CurrentCellValueChanged="MainTable_CurrentCellValueChanged"/>
     </Grid>

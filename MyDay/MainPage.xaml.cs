@@ -56,18 +56,6 @@ namespace MyDay
             EditingTime = false;
             EditingTaskDescription = false;
 
-            CreationDateCheckBox.IsChecked = false;
-            DueDateCheckBox.IsChecked = false;
-            PriorityCheckBox.IsChecked = false;
-            PendingCheckBox.IsChecked = false;
-            CategoryCheckBox.IsChecked = false;
-
-            CreationDatePicker.IsEnabled = false;
-            DueDatePicker.IsEnabled = false;
-            PriorityComboBox.IsEnabled = false;
-            PendingComboBox.IsEnabled = false;
-            CategoryComboBox.IsEnabled = false;
-
             GridCBItems.Add("High");
             GridCBItems.Add("Normal");
             GridCBItems.Add("Low");
@@ -78,6 +66,8 @@ namespace MyDay
             }
             catch (Exception ex) { await new MessageDialog(ex.ToString(), "Loading Tasks Error").ShowAsync(); }
             MainTable.ItemsSource = AllTasks;
+            FillCategoryComboBox();
+            UpdateUpcomingTaskLabel();
         }
 
         private void LoadAllTasks()
@@ -124,6 +114,8 @@ namespace MyDay
             AllTasks.Add(newTask);
             TaskIDs.Add(newTask.TaskID);
             MainTable.UpdateLayout();
+            SaveButton.IsEnabled = true;
+            FilterButton.IsEnabled = false;
         }
 
         private int SearchObservableCollection(ObservableCollection<Task> list, string ID)
@@ -157,36 +149,8 @@ namespace MyDay
             {
                 await new MessageDialog("A Task must be selected for it to be deleted.", "No Selection Error").ShowAsync();
             }
-        }
-
-        private void CreationDateCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            if (CreationDateCheckBox.IsChecked == true) CreationDatePicker.IsEnabled = true;
-            else CreationDatePicker.IsEnabled = false;
-        }
-
-        private void PriorityCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            if (PriorityCheckBox.IsChecked == true) PriorityComboBox.IsEnabled = true;
-            else PriorityComboBox.IsEnabled = false;
-        }
-
-        private void DueDateCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            if (DueDateCheckBox.IsChecked == true) DueDatePicker.IsEnabled = true;
-            else DueDatePicker.IsEnabled = false;
-        }
-
-        private void PendingCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            if (PendingCheckBox.IsChecked == true) PendingComboBox.IsEnabled = true;
-            else PendingComboBox.IsEnabled = false;
-        }
-
-        private void CategoryCheckBox_Click(object sender, RoutedEventArgs e)
-        {
-            if (CategoryCheckBox.IsChecked == true) CategoryComboBox.IsEnabled = true;
-            else CategoryComboBox.IsEnabled = false;
+            FilterButton.IsEnabled = false;
+            SaveButton.IsEnabled = true;
         }
 
         private void MainTable_AutoGeneratingColumn(object sender, AutoGeneratingColumnArgs e)
@@ -270,6 +234,43 @@ namespace MyDay
         {
             TasksStorage.DeleteStorageFile();
             foreach (Task myTask in AllTasks) TasksStorage.SaveTask(myTask);
+            SaveButton.IsEnabled = false;
+            FilterButton.IsEnabled = true;
+            UpdateUpcomingTaskLabel();
+        }
+
+        private int PriorityNum(string priority)
+        {
+            switch (priority)
+            {
+                case "High":
+                    return 2;
+                case "Normal":
+                    return 1;
+            }
+            return 0;
+        }
+
+        private void UpdateUpcomingTaskLabel()
+        {
+            if (AllTasks.Count > 0)
+            {
+                Task result = AllTasks[0];
+                foreach (Task task in AllTasks)
+                {
+                    if (task.DueDate < result.DueDate) result = task;
+                    else if (task.DueDate == result.DueDate)
+                    {
+                        if (Convert.ToDateTime(task.DueTime) < Convert.ToDateTime(result.DueTime)) result = task;
+                        else if (Convert.ToDateTime(task.DueTime) == Convert.ToDateTime(result.DueTime))
+                        {
+                            if (PriorityNum(task.Priority) > PriorityNum(result.Priority)) result = task;
+                        }
+                    }
+                }
+                UpcomingLabel.Text = "Upcoming Task: " + result.TaskDescription;
+            }
+            else UpcomingLabel.Text = "No Tasks left";
         }
 
         private async void MainTable_CurrentCellEndEdit(object sender, CurrentCellEndEditEventArgs e)
@@ -331,12 +332,24 @@ namespace MyDay
             }
             int SelectedRow = MainTable.SelectedIndex;
             AllTasks[SearchObservableCollection(AllTasks, GetTaskIDFromMainTable())] = AllTasks[SelectedRow];
+
+            FillCategoryComboBox();
+        }
+
+        private void FillCategoryComboBox()
+        {
+            HashSet<string> uniqueCategories = new HashSet<string>();
+            foreach (Task task in AllTasks) uniqueCategories.Add(task.Category);
+
+            CategoryComboBox.ItemsSource = uniqueCategories;
         }
 
         private void MainTable_CurrentCellBeginEdit(object sender, CurrentCellBeginEditEventArgs e)
         {
             if (e.Column.HeaderText == "Due Time") EditingTime = true;
             else if (e.Column.HeaderText == "Task Description") EditingTaskDescription = true;
+            FilterButton.IsEnabled = false;
+            SaveButton.IsEnabled = true;
         }
 
         private void MainTable_CurrentCellValueChanged(object sender, CurrentCellValueChangedEventArgs e)
@@ -346,31 +359,102 @@ namespace MyDay
 
         private void FilterButton_Click(object sender, RoutedEventArgs e)
         {
-            if (FilterButton.Label == "Reset Filter") LoadAllTasks();
+            if (FilterButton.Label == "Reset Filters")
+            {
+                AllTasks.Clear();
+                LoadAllTasks();
+            }
             else
             {
                 //Delete Tasks for each Filter
-                if (CreationDatePicker.IsEnabled && CreationDatePicker.Date.HasValue)
+                if (CreationDatePicker.Date.HasValue)
                 {
-                    string date = CreationDatePicker.Date.ToString().Substring(0, 10);
-                    foreach (Task task in AllTasks)
+                    foreach (Task task in AllTasks.ToList())
                     {
-                        
+                        if (new DateTimeOffset?(task.CreationDate.Date).Value.Date != CreationDatePicker.Date.Value.Date) AllTasks.Remove(task);
+                    }
+                }
+
+                if (DueDatePicker.Date.HasValue)
+                {
+                    foreach (Task task in AllTasks.ToList())
+                    {
+                        if (new DateTimeOffset?(task.DueDate.Date).Value.Date != DueDatePicker.Date.Value.Date) AllTasks.Remove(task);
+                    }
+                }
+
+                if (PriorityComboBox.SelectedIndex != -1)
+                {
+                    string value = ((ContentControl)PriorityComboBox.SelectedItem).Content.ToString();
+                    foreach (Task task in AllTasks.ToList())
+                    {
+                        if (task.Priority != value) AllTasks.Remove(task);
+                    }
+                }
+
+                if (PendingComboBox.SelectedIndex != -1)
+                {
+                    bool complete = true;
+                    if (((ContentControl)PendingComboBox.SelectedItem).Content.ToString() == "Complete") complete = true;
+                    else complete = false;
+                    foreach (Task task in AllTasks.ToList())
+                    {
+                        if (task.Complete != complete) AllTasks.Remove(task);
+                    }
+                }
+
+                if (CategoryComboBox.SelectedIndex != -1)
+                {
+                    string value = CategoryComboBox.Items[CategoryComboBox.SelectedIndex].ToString();
+                    foreach (Task task in AllTasks.ToList())
+                    {
+                        if (task.Category != value) AllTasks.Remove(task);
                     }
                 }
             }
 
-            if (FilterButton.Icon == new SymbolIcon(Symbol.Filter))
+            if (FilterButton.Label == "Apply Filters")
             {
                 FilterButton.Icon = new SymbolIcon(Symbol.Refresh);
-                FilterButton.Label = "Reset Filter";
+                FilterButton.Label = "Reset Filters";
+                CreateButton.IsEnabled = false;
+                DeleteButton.IsEnabled = false;
+                SaveButton.IsEnabled = false;
             }
-
             else 
             {
                 FilterButton.Icon = new SymbolIcon(Symbol.Filter);
-                FilterButton.Label = "Apply Filter";
+                FilterButton.Label = "Apply Filters";
+                CreateButton.IsEnabled = true;
+                DeleteButton.IsEnabled = true;
+                SaveButton.IsEnabled = true;
             }
+            MainTable.UpdateLayout();
+        }
+
+        private void CategoryLabel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            CategoryComboBox.SelectedItem = null;
+        }
+
+        private void PendingLabel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            PendingComboBox.SelectedItem = null;
+        }
+
+        private void PriorityLabel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            PriorityComboBox.SelectedItem = null;
+        }
+
+        private void DueDateLabel_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            DueDatePicker.Date = null;
+        }
+
+        private void CreationDateLabel_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            CreationDatePicker.Date = null;
         }
     }
 }
